@@ -1,0 +1,236 @@
+\documentclass{beamer}
+
+
+
+
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{ mathrsfs }
+\usepackage[russian,english]{babel}
+
+\author{Деркач Максим Юрьевич}
+\title{Криптографические протоколы}
+\subtitle{Лекция 5 \\ Протоколы "сильной" аутентификации }
+
+
+%\usetheme{lucid}
+\begin{document}
+	\frame {
+		\titlepage
+	}
+	\frame {
+		\frametitle{Ссылки}
+		
+	}
+	
+	\frame{
+		\frametitle{Классификация протоколов "сильной" аутентификации}
+		\begin{itemize}
+				\item[*] на основе симметричных алгоритмов шифрования;
+				\item[*] на основе асимметричных алгоритмов шифрования;
+				\item[*] на основе ЭЦП.	
+		\end{itemize}
+	}
+
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{На основе симметричных алгоритмов шифрования}
+		
+		\textbf{ISO/ IEC 9798 - 2}
+		\begin{enumerate}
+			\item $A -> B: text_2 || E_{K_{AB}}(T_A/N_A || ID_B || text_1)$
+			\item $B -> A: text_4 || E_{K_{AB}}(T_B/N_B || ID_A || text_3)$
+		\end{enumerate}
+
+		\bigskip
+
+		\begin{enumerate}
+			\item $B -> A: R_B || text_1$
+			\item $A -> B: text_3 || E_{K_{AB}}(R_B || ID_B || text_2)$
+		\end{enumerate}
+	
+		\bigskip
+		
+		\begin{enumerate}
+			\item $B -> A: R_B || text_1$
+			\item $A -> B: text_3 || E_{K_{AB}}(R_A || R_B || ID_B || text_2)$
+			\item $B -> A: text_5 || E_{K_{AB}}(R_B || R_A || text_4)$
+		\end{enumerate}
+		\textbf{Замечание} 
+		Длина $ID_B || text_2$ не должна равняться длине $text_4$
+		
+		
+	}
+	
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{На основе симметричных алгоритмов шифрования}
+		
+		\textbf{Протокол Ву-Лама (Woo-Lam)}
+		\begin{enumerate}
+			\item $A -> B: ID_A$
+			\item $B -> A: R_B$
+			\item $A -> B: E_{K_{AT}}(R_B)$
+			\item $B -> T: E_{K_{BT}}(ID_A || E_{K_{AT}}(R_B))$
+			\item $T -> B: E_{K_{BT}}(R_B)$
+		\end{enumerate}
+	}
+
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{На основе симметричных алгоритмов шифрования}
+		
+		\textbf{Атака параллельного сеанса}
+		\begin{enumerate}
+			\item[1]  $I(A) -> B: ID_A$
+			\item[1'] $I -> B: ID_I$
+			
+			\item[2]  $B -> I(A): R_B$
+			\item[2'] $B -> I: R_B^*$
+			
+			
+			\item[3]  $I(A) -> B: E_{K_{IT}}(R_B)$
+			\item[3'] $I -> B: E_{K_{IT}}(R_B)$
+			
+			
+			\item[4]  $B -> T: E_{K_{BT}}(ID_A || E_{K_{IT}}(R_B))$
+			\item[4'] $B -> T: E_{K_{BT}}(ID_I || E_{K_{IT}}(R_B))$
+			
+			
+			\item[5]  $T -> B: E_{K_{BT}}("MYCOP")$
+			\item[5'] $T -> B: E_{K_{BT}}(R_B)$
+		\end{enumerate}	
+	}
+	
+		\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{На основе симметричных алгоритмов шифрования}
+		
+		\textbf{Протокол Отвея-Риса}
+		\begin{enumerate}
+			\item $A -> B: ID_A || ID_B || K_{AT}(ID_A || ID_B || N_A || R_A) || N_A$
+			\item $B -> T: ID_A || ID_B || K_{AT}(ID_A || ID_B || N_A || R_A) ||$\\ 
+			 \quad \quad \quad  \quad \ $K_{BT}(ID_A || ID_B || N_A || R_B) || N_A$
+			\item $T -> B: E_{K_{AT}}(K || R_A) || E_{K_{BT}}( K ||R_B) || N_A$
+			\item $B -> A: E_{K_{AT}}(K || R_A) || E_{K}( R_A ||R_B) || N_A$
+			\item $A -> B: E_{K}(R_B)$
+		\end{enumerate}
+	
+		\textbf{Протокол с использованием хэш-функции}
+		\begin{enumerate}
+			\item $B -> A: R_B || text_1$
+			\item $A -> B: text_3 || H_{K_{AB}}(R_A || R_B || ID_B || text_2)$
+			\item $B -> A: text_5 || H_{K_{AB}}(R_B || R_A || ID_A || text_4)$
+		\end{enumerate}
+	}
+	
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{На основе асимметричных алгоритмов шифрования}
+		
+		\textbf{С использованием хэш-функции}
+		\begin{enumerate}
+			\item  $B -> A: h(R_B) || ID_B || E_{K_A}^{pub}(R_B || ID_B)$
+			\item  $A -> B: R_B$
+		\end{enumerate}	
+	
+		\bigskip
+		
+		
+		\textbf{NSPK}
+		\begin{enumerate}
+			\item  $A -> B: E_{K_B^{pub}}(R_A || ID_A)$
+			\item  $B -> A: E_{K_A^{pub}}(R_A || R_B)$
+			\item  $A -> B: E_{K_B^{pub}}(R_B)$
+		\end{enumerate}	
+	}
+
+
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{На основе асимметричных алгоритмов шифрования}
+		
+		\textbf{Атака параллельного сеанса}
+		\textbf{NSPK}
+		\begin{enumerate}
+			\item[1]   $A -> I: E_{K_I^{pub}}(R_A || ID_A)$
+			\item[1']  $I(A) -> B: E_{K_B^{pub}}(R_A || ID_A)$
+			
+			\item[2]   $B -> I(A): E_{K_A^{pub}}(R_A || R_B)$
+			\item[2']  $I -> A: E_{K_A^{pub}}(R_A || R_B)$
+			
+			\item[3]   $A -> I: E_{K_I^{pub}}(R_B)$
+			\item[3']  $I(A) -> B: E_{K_B^{pub}}(R_B)$
+			
+		\end{enumerate}	
+	
+		\textbf{Защита}
+		\begin{itemize}
+		
+		\item
+			\begin{enumerate}
+				\item[2]  $B -> A: E_{K_A^{pub}}(R_A || R_B  || ID_B)$
+			\end{enumerate}	
+		\item
+			\begin{enumerate}
+				\item[3]  $A -> B: E_{K_{h(R_B)}}(ID_B)$
+			\end{enumerate}	
+			
+		\end{itemize}
+	}
+	
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{С использованием ЭЦП}
+		
+		\begin{enumerate}
+			\item  $A -> B: cert_A || T_A / N_A || ID_B || text_2 || sign_A(T_A/N_A || ID_B || text1) $
+			\item  $B -> A: cert_B || T_B / N_B || ID_A || text_4 || sign_B(T_B/N_B || ID_A || text3) $
+		\end{enumerate}	
+		
+		\bigskip
+		
+
+		\begin{enumerate}
+			\item  $B -> A: R_B || text_1$
+			\item  $A -> B: cert_A || R_A || R_B || ID_B || text_3 || sign_A(R_A || R_B || ID_B || text_2)$
+			\item  $B -> A: cert_B || R_B || R_A || ID_A || text_5 || sign_B(R_B || R_A || ID_A || text_4)$
+		\end{enumerate}	
+	}
+
+	\frame{
+		\frametitle{Протоколы "сильной" аутентификации}
+		\framesubtitle{С использованием ЭЦП}
+	
+		
+		
+		\textbf{Атака}
+		\begin{enumerate}
+			\item  $I(B) -> A: R_B$
+			\item  $A -> I(B): cert_A || R_A || R_B || ID_B || sign_A(R_A || R_B || ID_B)$
+			
+			\item[1']  $I(A) -> B: R_A$
+			\item[2']  $B -> I(A): cert_B || R_B' || R_A || ID_A || sign_B(R_B' || R_A || ID_A )$
+			
+			
+			\item  $I(B) -> A: cert_B || R_B' || R_A || ID_A || sign_B(R_B' || R_A || ID_A )$
+		\end{enumerate}	
+	}
+
+	\frame {
+		\frametitle{}
+		
+	}
+
+
+	\frame {
+	\begin{figure}
+		%\includegraphics[width=0.8\linewidth]{index1.jpeg}
+		
+	\end{figure}
+	}
+
+\end{document}

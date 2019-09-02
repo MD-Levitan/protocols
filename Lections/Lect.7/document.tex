@@ -1,0 +1,499 @@
+\documentclass{beamer}
+
+
+
+
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{ mathrsfs }
+\usepackage[russian,english]{babel}
+%\usepackage{ dsfont }
+
+\author{Деркач Максим Юрьевич}
+\title{Криптографические протоколы}
+\subtitle{Лекция 7 \\ Протоколы распределения ключей (Часть 1)}
+
+
+%\usetheme{lucid}
+\begin{document}
+	\frame {
+		\titlepage
+	}
+	\frame {
+		\frametitle{Ссылки}
+		
+		\begin{enumerate}
+			\item ISO/IEC 11770-1:2010 – Information technology – Security techniques – Key management – Part 1: Framework 
+			\item ISO/IEC 11770-2:2008 – Information technology – Security techniques – Key management – Part 2: Mechanisms using symmetric techniques 
+			\item ISO/IEC 11770-3:2008 – Information technology – Security techniques – Key management – Part 3: Mechanisms using asymmetric techniques 
+			\item ISO/IEC 11770-4:2006 – Information technology – Security techniques – Key management – Part 4: Mechanisms based on weak secrets
+			
+			\item СТБ 34.101.45-2013 "Информационные технологии и безопасность. Алгоритмы электронной цифровой подписи и транспорта ключа на основе эллиптических кривых". \hyperlink{name}{http://apmi.bsu.by/assets/files/std/bign-spec19.pdf} 
+			
+			\item СТБ 34.101.60-2014 "Информационные технологии и безопасность. Алгоритмы разделения секрета". \hyperlink{name}{http://apmi.bsu.by/assets/files/std/bels-spec12.pdf} 
+		\end{enumerate}
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Определения и понятия}
+		\textbf{Определение 1}
+		
+		Протокол распределения ключей (key establishment protocol)- это криптографический протокол, в процессе выполнения которого общий секрет доступен двум или более сторонам для последующего использования в криптографических целях.
+		\bigskip
+		
+		Протоколы распределения ключей подразделяются на два класса:
+		\begin{itemize}
+			\item протоколы транспортировки ключей,
+			\item протоколы обмена ключами.
+		\end{itemize}
+		
+		\bigskip
+		
+		\textbf{Определение 2}
+		
+		Протокол транспортировки ключей (key transport)- это протокол, распределения ключей, в котрых один участник создает или другим образом приобретает секрет и безопасным образом передает его другим участникам.
+			
+	}
+
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Определения и понятия}
+				
+		\textbf{Определение 3}
+		
+		Протокол обмена ключами (key exchange) - это протокол, распределения ключей, в котрых общий секрет вырабатывается двумя или более участниками как функция от информации.	
+		
+				
+		\bigskip
+		
+		\textbf{Классификация протоколов распределения ключей}
+	
+		\begin{itemize}
+			\item По типу выработки ключей:
+			\begin{enumerate}
+				\item обновление ключей (key update) - выработка совершенно нового  ключа, не зависищего от ключей выработанных в прошлых сеансах выполнения ппротокола;
+				
+				\item выработка производных ключей (key derivation) - вырабока нового ключа на основе уже существующих у участников криптосистемы.
+			\end{enumerate}	
+		\end{itemize}
+		
+		}
+
+\frame{
+	\frametitle{Протоколы распределения ключей}
+	\framesubtitle{Определения и понятия}
+	\textbf{Классификация протоколов распределения ключей}
+	
+	\begin{itemize}
+		\item По типу :
+		\begin{enumerate}
+			\item протоколы с предраспределенными ключами (key pre-distribution) -  протоколы распределения, в которых результирующие ключи полностью определены  априори начальным ключевым материалом (схемы разделения секрета);
+			\item протоколы динамического распределения ключей (dynamic key establishment) - протоколы распределения, в которых ключи, вырабатываемые участниками, различны в различных сеансах протокола.
+		\end{enumerate}
+		
+		\item По типу используемых криптосистем:
+		\begin{enumerate}
+			\item  симметричные;
+			\item  асиметричные.
+		\end{enumerate}
+		
+		\item По количеству сторон:
+		\begin{enumerate}
+			\item  с участием "третьей стороны" (сервер аутентификации, центр распределения ключей, удостоверяющий центр и др.);
+			\item  без участия "третьей стороны".
+		\end{enumerate}
+		
+	\end{itemize}
+	
+	}
+
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{ISO/IEC 11770-2}
+		
+		\textbf{Mech. \#2 (Однораундовый протокол)}
+		\begin{enumerate}
+			\item $A -> B: E_{K_{AB}}(KS)$
+		\end{enumerate}	
+		$A$ генерирует $KS$.
+		
+		\bigskip
+		
+		\textbf{Mech. \#1 (Однораундовый протокол)}
+		
+		$TVP$ - переменная
+		\begin{enumerate}
+			\item $A -> B: TVP$ \\
+			$KS = f(K_{AB}, TVP)$ , где $f$ - одностороняя функция.
+		\end{enumerate}		
+	
+		\bigskip
+		
+		\textbf{Mech. \#3 (Однораундовый протокол)}
+		\begin{enumerate}
+			\item $A -> B: E_{K_{AB}}(KS || T_A / N_A || ID_B)$
+		\end{enumerate}	
+		$T_A / N_A$ - проверяет корректность момента времени или номера сессии.\\
+		$ID_B$ - против атаки отражения.
+	}
+
+		\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{ISO/IEC 11770-2}
+		
+		\textbf{Mech. \#4 (Двухраундовый протокол)}
+		\begin{enumerate}
+			\item $B -> A: R_B$
+			\item $A -> B: E_{K_{AB}}(KS || R_B || ID_B)$
+		\end{enumerate}	
+		
+		\bigskip
+		
+		\textbf{Mech. \#4 (Модификация для двустороней аунтетификации) }
+		\begin{enumerate}
+			\item $B -> A: R_B$
+			\item $A -> B: E_{K_{AB}}(KS || R_A || R_B || ID_B)$
+			\item $B -> A: E_{KS}(R_A)$
+		\end{enumerate}	
+		
+		\bigskip
+		
+		\textbf{Mech. \#6}
+	
+		$K_A$ - часть ключа $KS$, которая принадлежит $A$.\\
+		$K_B$ -	часть ключа $KS$, которая принадлежит $B$.\\
+		$KS = f(K_A, K_B)$
+		\begin{enumerate}
+			\item $B -> A: R_B$
+			\item $A -> B: E_{K_{AB}}(K_A || R_A || R_B || ID_B)$
+			\item $B -> A: E_{K_{AB}}(K_B || R_A || R_B )$
+		\end{enumerate}	
+
+	}
+
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{ISO/IEC 11770-2}
+		
+		\textbf{Mech. \#5}
+		
+		\begin{enumerate}
+			\item $A -> B: E_{K_{AB}}(K_A || T_A / N_A || ID_B)$
+			\item $B -> A: E_{K_{AB}}(K_B || T_B / N_B || ID_A)$
+		\end{enumerate}	
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Бесключевой протокол Шамира (Трёхпроходный протокол Шамира)}
+		
+		\textbf{Коммутирующее шифрующее преобразование}
+		$\forall M, \ K_1,\ K_2 \ : \ E_{K_1}(E_{K_2}(M)) = E_{K_2}(E_{K_1}(M)) $\\
+		
+		$E_K(M) = M \oplus K$  - слабое преобразование.\\
+		$E_{K_A}(M) = M ^ a  mod p$, где $a$ - зависит от $K_A$, $p$ - простое.\\
+		
+		
+		\begin{enumerate}
+			\item $A -> B: E_{K_A}(KS)$
+			\item $B -> A: E_{K_B}(E_{K_A}(KS))$
+			\item $A -> B: D_{K_A}(E_{K_B}(E_{K_A}(KS))) = E_{K_B}(KS)$ 
+		\end{enumerate}	
+		Отсутствует аутентификация, вместо $B$ злоумышленник может вступить в протокол со своим ключом.
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Трёхсторонние протоколы}
+		
+		\textbf{Wide-Mouth-Frag}
+		\begin{enumerate}
+			\item $A -> S: ID_A || E_{K_{AS}}(T_A || ID_B || KS)$
+			\item $S -> B: E_{K_{BS}}(T_S || ID_A || KS)$
+		\end{enumerate}
+		Интервалы времени должны быть достаточно короткими.
+		
+		\bigskip
+		\textbf{Yahalom}
+		\begin{enumerate}
+			\item $A -> B: ID_A || R_A$
+			\item $B -> S: ID_B || E_{K_{BS}}(ID_A || R_A || R_B)$
+			\item $S -> A: $\\
+		\quad \quad \quad  \quad $ m_a = E_{K_{AS}}(ID_B || KS || R_A || R_B) ||$ \\
+		 \quad \quad \quad  \quad $ m_b = E_{K_{BS}}(ID_A || KS)$
+			\item $A -> B: m_b || E_{KS}(R_B)$			   
+		\end{enumerate}
+		$E_{KS}(R_B)$ - нет проверки новизны.
+			
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Трёхсторонние протоколы}
+		
+		\textbf{BAN-Yahalom}
+		\begin{enumerate}
+			\item $A -> B: ID_A || R_A$
+			\item $B -> S: ID_B || R_B || E_{K_{BS}}(ID_A || R_A)$
+			\item $S -> A: R_B || $\\
+			\quad \quad \quad  \quad $m_a = E_{K_{AS}}(ID_B || KS || R_A) ||$\\
+			\quad \quad \quad  \quad $m_b = E_{K_{BS}}(ID_A || KS || R_B)$
+			\item $A -> B: m_b || E_{KS}(R_B)$			   
+		\end{enumerate}
+	
+		\bigskip
+		\textbf{Атака чередования сеансов и подмены типов}
+		\begin{enumerate}
+			\item $I(A) -> B: ID_A || R_A$
+			\item $B -> I(S): ID_B || R_B || E_{K_{BS}}(ID_A || R_A)$
+			
+			\item[1'] $I(A) -> B: ID_A || (R_A || R_B)$
+			\item[2'] $B -> I(S): ID_B || R_B' || E_{K_{BS}}(ID_A || (R_A || R_B))$
+			
+			\item $-----------$
+							      
+			\item $I(A) -> B: E_{K_{BS}}(ID_A || R_A || R_B) || E_{R_A}(R_B)$			   
+		\end{enumerate}
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Трёхсторонние протоколы}
+		
+		\textbf{Needham-Schroeder (NSSK)}
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B || R_A$
+			\item $S -> A: E_{K_{AS}}(R_A || ID_B || KS || E_{K_{BS}}(KS || ID_A))$
+			
+			\item $A -> B: E_{K_{BS}}(KS || ID_A)$
+			\item $B -> A: E_{KS}(R_B)$
+			\item $A -> B: E_{KS}(R_B - 1)$			   
+		\end{enumerate}
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Трёхсторонние протоколы}
+		
+		\textbf{Протокол Деннинг - Сакко}
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B$
+			\item $S -> A: E_{K_{AS}}(ID_B || KS || T_S || E_{K_{BS}}(ID_A || KS || T_S))$
+			
+			\item $A -> B: E_{K_{BS}}(ID_A || KS || T_S)$
+			\item $B -> A: E_{KS}(R_B)$
+			\item $A -> B: E_{KS}(R_B - 1)$			   
+		\end{enumerate}
+	
+		\bigskip
+		
+		\begin{enumerate}
+			\item $A -> B: ID_A$
+			\item $B -> A: E_{K_{BS}}(ID_A || R_B)$
+			\item $A -> S: ID_A || ID_B || R_A || E_{K_{BS}}(ID_A || R_B)$
+			\item $S -> A: E_{K_{AS}}(R_A || ID_B || KS || E_{K_{BS}}(KS || R_B || ID_A ))$
+			
+			\item $A -> B: E_{K_{BS}}(KS || R_B || ID_A )$
+			\item $B -> A: E_{KS}(R_B^{'})$
+			\item $A -> B: E_{KS}(R_B^{'} - 1)$			   
+		\end{enumerate}
+		
+	}
+
+		\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Трёхсторонние протоколы}
+		
+		\textbf{Rellare}
+		$K_{AS} = (K^C_{AS} || K^M_{AS})$
+		\begin{enumerate}
+			\item $A -> B: ID_A || R_A$
+			\item $B -> S: ID_A || ID_B || R_A || R_B$
+			
+			\item $S -> A: E_{K^C_{AS}}(KS) || M_{K^M_{AS}}(ID_A || ID_B || R_A || E_{K^C_{AS}}(KS))$
+			\item $S -> B: E_{K^C_{BS}}(KS) || M_{K^M_{BS}}(ID_B || ID_A || R_B || E_{K^C_{BS}}(KS))$	   
+		\end{enumerate}
+		
+		\bigskip
+		
+		\textbf{Протокол Неймана - Стабалабайки}
+		
+		Этап 1
+		\begin{enumerate}
+			\item $A -> B: ID_A || R_A$
+			\item $B -> S: ID_B || E_{K_{BS}}(ID_A || R_A || T_B) || R_B$
+			\item $S -> A: E_{K_{AS}}(ID_B || R_A || KS || T_B) || E_{K_{BS}}(ID_A || KS || T_B ) || R_B$
+			
+			\item $A -> B: E_{K_{BS}}(ID_A || KS || T_B ) || E_{KS}(R_B)$			   
+		\end{enumerate}
+		Этап 2
+		\begin{enumerate}
+		\item $A -> B: R_A^{'} || E_{K_{BS}}(ID_A || KS || T_B )$
+		\item $B -> A: R_B^{'} || E_{KS}(R_A^{'})$
+		\item $A -> B: E_{KS}(R_B^{'})$			   
+		\end{enumerate}
+		
+	}
+
+		\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Трёхсторонние протоколы}
+		
+		\textbf{Атака 1}
+		Этап 1
+		\begin{enumerate}
+			\item $I(A) -> B: ID_A || R_A$
+			\item $B -> I(S): ID_B || E_{K_{BS}}(ID_A || R_A || T_B) || R_B$
+			\item $-------------$
+			
+			\item $I(A) -> B: E_{K_{BS}}(ID_A || R_A || T_B ) || E_{R_A}(R_B)$			   
+		\end{enumerate}
+		Этап 2
+		\begin{enumerate}
+			\item $I(A) -> B: R_A^{'} || E_{K_{BS}}(ID_A || R_A || T_B )$
+			\item $B -> I(A): R_B^{'} || E_{R_A}(R_A^{'})$
+			\item $I(A) -> B: E_{R_A}(R_B^{'})$			   
+		\end{enumerate}
+		
+	}
+
+	
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Трёхсторонние протоколы}
+		
+		\textbf{Атака 2}
+		Этап 1
+		\begin{enumerate}
+			\item $A -> B: ID_A || R_A$
+			\item $B -> S: ID_B || E_{K_{BS}}(ID_A || R_A || T_B) || R_B$
+			\item $S -> A: E_{K_{AS}}(ID_B || R_A || KS || T_B) || E_{K_{BS}}(ID_A || KS || T_B ) || R_B$
+			\item $A -> B: E_{K_{BS}}(ID_A || KS || T_B ) || E_{KS}(R_B) || E_{KS}(R_B) $			   
+		\end{enumerate}
+		
+		Этап 2
+		\begin{enumerate}
+			\item $I(A) -> B: R_A^{'} || E_{K_{BS}}(ID_A || KS || T_B )$
+			\item $B -> I(A): R_B^{'} || E_{KS}(R_A^{'})$
+			
+			\item[1'] $I(A) -> B: R_B^{'} || E_{K_{BS}}(ID_A || KS || T_B )$
+			\item[2'] $B -> I(A): R_B^{''} || E_{KS}(R_B^{'})$
+			
+			\item $I(A) -> B: E_{KS}(R_B^{'})$			   
+		\end{enumerate}
+		
+	}
+	
+		\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Трёхсторонние протоколы}
+		
+		
+		\textbf{Протокол Отвея - Рисса}\\
+		$M$ - ID сеанса. \\
+		$v$ - бит направленности. 
+		\begin{enumerate}
+			\item $A -> B: M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B)$
+			\item $B -> S: M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
+			
+			\item $S -> B: M || E_{K_{AS}}(R_A || KS) || E_{K_{BS}}(R_B || KS)$
+			\item $B -> A: M || E_{K_{AS}}(R_A || KS)$			   
+		\end{enumerate}
+		
+	}
+	
+	\frame{
+	\frametitle{Протоколы распределения ключей}
+	\subtitle{Трёхсторонние протоколы}
+	
+	
+	
+\textbf{Атака 1}\\
+	$KS$ - 64 бита, $M$ - 32 бита, $ID_A, ID_B$ - 16 бит. \\ 
+	$len(KS) = len(M + ID_A + ID_A)$
+	\begin{enumerate}
+		\item[1'] $A -> I(B): M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B)$	
+		\item[4'] $I(B) -> A: M || E_{K_{AS}}(R_A || M || ID_A || ID_B)$	   
+	\end{enumerate}
+
+
+		\bigskip
+	\textbf{Атака 2}
+	\begin{enumerate}
+		\item $A -> B: M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B)$
+		\item $B -> I(S): M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
+		
+		\item $I(S) -> B: M || E_{K_{AS}}(vR_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
+		\item $B -> A: M ||E_{K_{AS}}(vR_A || M || ID_A || ID_B) $			   
+	\end{enumerate}
+	
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{ISO/IEC 9782-2}
+		
+		\begin{enumerate}
+			\item $A -> S: TVP_A || ID_B || text$
+			\item $S -> A: text_4 ||  E_{K_{AS}}(TVP_A |KS || ID_B ||text_3) || E_{K_{BS}}(T_S / N_S || KS || ID_A || text_2)$
+			
+			\item $A -> B: text_6 || E_{K_{BS}}(T_S / N_S || KS || ID_A || text_2) || E_{KS}(T_A / N_A || ID_B || text_5)$
+			\item $B -> A: text_5 || E_{KS}(T_B / N_B || ID_A || text_2)$			   
+		\end{enumerate}
+		
+		\bigskip
+		
+		\begin{enumerate}
+			\item $B -> A: R_B || text_1$
+			\item $A -> S: R_A^{'} || R_B ID_B || tetx_2$
+			\item $S -> A: text_5 ||  E_{K_{AS}}(R_A^{'} |KS || ID_B ||text_4) || E_{K_{BS}}(R_B || KS || ID_A || text_3)$
+			\item $A -> B: text_7 || E_{K_{BS}}(R_B || KS || ID_A || text_3) || E_{KS}(R_A || R_B || text_6)$
+			
+			\item $B -> A: text_9 || E_{KS}(R_B || R_A || tetx_8)$
+			\end{enumerate}
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{ISO/IEC 11770-2}
+		
+		\textbf{Mech. \#10}
+		
+		\begin{enumerate}
+			\item $A -> S: TVP_A || ID_B$
+			\item $S -> A: E_{K_{AS}}(TVP_A || KS || ID_B || text_1) || 
+						E_{K_{BS}}(T_S / N_S || KS || ID_A || text_2) || $
+			\item $A -> B: E_{K_{BS}}(T_S / N_S || KS || ID_A || text_2) || E_{KS}(T_A/N_A || ID_B || text_3)$
+			\item $B - >A: E_{KS}(T_B/N_B || ID_A || text_4)$
+		\end{enumerate}	
+		
+	}
+	
+	
+	\frame {
+		\frametitle{}
+		
+	}
+
+
+	\frame {
+	\begin{figure}
+		\includegraphics[width=0.8\linewidth]{index1.jpeg}
+		
+	\end{figure}
+	}
+
+\end{document}

@@ -1,0 +1,347 @@
+\documentclass{beamer}
+
+
+
+
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{ mathrsfs }
+\usepackage[russian,english]{babel}
+%\usepackage{ dsfont }
+
+\author{Деркач Максим Юрьевич}
+\title{Криптографические протоколы}
+\subtitle{Лекция 8 \\ Протоколы распределения ключей (Часть 2)}
+
+
+%\usetheme{lucid}
+\begin{document}
+	\frame {
+		\titlepage
+	}
+	\frame {
+		\frametitle{Ссылки}
+		
+		\begin{enumerate}
+			\item ISO/IEC 11770-1:2010 – Information technology – Security techniques – Key management – Part 1: Framework 
+			\item ISO/IEC 11770-2:2008 – Information technology – Security techniques – Key management – Part 2: Mechanisms using symmetric techniques 
+			\item ISO/IEC 11770-3:2008 – Information technology – Security techniques – Key management – Part 3: Mechanisms using asymmetric techniques 
+			\item ISO/IEC 11770-4:2006 – Information technology – Security techniques – Key management – Part 4: Mechanisms based on weak secrets
+			
+			\item СТБ 34.101.45-2013 "Информационные технологии и безопасность. Алгоритмы электронной цифровой подписи и транспорта ключа на основе эллиптических кривых". \hyperlink{name}{http://apmi.bsu.by/assets/files/std/bign-spec19.pdf} 
+			
+			\item СТБ 34.101.60-2014 "Информационные технологии и безопасность. Алгоритмы разделения секрета". \hyperlink{name}{http://apmi.bsu.by/assets/files/std/bels-spec12.pdf} 
+		\end{enumerate}
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Needham-Schroeder (NSSK)}
+		
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B || R_A$
+			\item $S -> A: E_{K_{AS}}(R_A || ID_B || KS || E_{K_{BS}}(KS || ID_A))$
+			
+			\item $A -> B: E_{K_{BS}}(KS || ID_A)$
+			\item $B -> A: E_{KS}(R_B)$
+			\item $A -> B: E_{KS}(R_B - 1)$			   
+		\end{enumerate}
+	}
+
+		\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Needham-Schroeder (NSSK)}
+		
+		
+		\textbf{Атака} \\
+		
+		Если ключ $KS$	скомпрометирован, возможна атака на протокол методом повтора сеанса: берутся	сообщения из прошлого сеанса с ключом $KS^{*}$: 
+		
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B || R_A$
+			\item $S -> A: E_{K_{AS}}(R_A || ID_B || KS || E_{K_{BS}}(KS || ID_A))$
+			
+			\item $I(A) -> B: E_{K_{BS}}(KS^{*} || ID_A)$
+			\item $B -> I(A): E_{KS^{*}}(R_B)$
+			\item $I(A) -> B: E_{KS^{*}}(R_B - 1)$			   
+		\end{enumerate}
+		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{KERBEROS}
+	
+		Несколько видоизмененный протокол   Needham  –  Schroeder  был положен в основу программного средства аутентификации пользователей распределенных вычислительных систем Kerberos.
+		\\		
+		В целях исключения возможности осуществления атаки, описанной выше, клиент,  пройдя аутентификацию на сервере аутентификации, должен предварительно, до того, как ему будет предоставлен доступ к серверам приложений, получить у специального сервера выдачи билетов так называемые билеты  – структуры данных,  в которых указывается срок полномочий клиента для доступа к серверам приложений. По истечении этого срока клиент должен получать новый билет. Эта мера ограничивает срок, в течение которого возможно осуществить атаку на протокол.
+		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{KERBEROS}
+		
+		$AS$ - сервер аутентификации\\
+		$TGS$ - сервер выдачи билетов\\
+		$ticket_1 = ID_{TGS} || E_{K_{AS,TGS}}(ID_A|| ID_{TGS} || T_{AS} || L || K_{A,TGS})$ - \\
+		$auth_1 = E_{K_{A,TGS}}(ID_A || T_A || ...)$\\
+		$ticket_2 = ID_B || E_{K_B}(ID_A || ID_B || ID_{TGS}|| L^{'} || K)$\\
+		$auth_2 = E_{K}(ID_A || T_A || K_A)$\\
+		$auth_3 = E_{K}(ID_A || T_A + 1 || K_B)$\\
+		
+				
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{KERBEROS}
+	
+		\begin{enumerate}
+		\item $A -> AS: \ \ ID_A || ID_{TGS} || R_A$
+		\item $AS -> A: \ \ E_{K_{A, AS}}( E_{K_{A,TGS}} || R_A || ticket_1)$
+		\item $A -> TGS: ID_B || ticket_1 || auth_1$
+		\item $TGT -> A: E_{K_{A,TGS}}(K || ticket_2)$	
+		\item $A -> B: \ \ \ \ ticket_2 || auth_2$
+		\item $B -> A: \ \ \ \ auth_3$	
+		\end{enumerate}	
+	
+		Шаги (1) – (2) выполняются только во время первого входа клиента в систему.\\
+		Шаги (3) – (4) выполняются всякий раз ,  когда клиент $A$ хочет обратиться к новому серверу $B$.  \\	
+		Шаг (5) выполняется всякий раз, когда $A$ проходит аутентификацию для $B$. \\	
+	 	Шаг (6) является необязательным и выполняется,  когда $A$ требует от $B$ взаимную аутентификацию.
+	 	
+	}
+	
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протоколы основанные на ассиметричных криптосистемах}
+		
+		\textbf{Needham-Schroeder Public Key (NSPK)}
+
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B $
+			\item $S -> A: E_{K_{S}^{sec}}(K_B^{pub} || ID_B)$
+	
+			\item $A -> B: E_{K_{B}^{pub}}(K_A || ID_A)$
+			\item $B -> S: ID_B || ID_A$
+			\item $S -> B: E_{K_{S}^{sec}}(K_A^{pub} || ID_A)$
+			
+			\item $B -> A: E_{K_{A}^{pub}}(K_B || K_A)$
+			\item $A -> B: E_{K_{B}^{pub}}(K_B)$
+			\item $A,B:	\ \ \ \ \ KS = f(K_A, K_B)$   
+		\end{enumerate}
+		
+		$E_{K_{S}^{sec}}()$ - подпись на секретном ключе.\\
+		$E_{K_{B}^{pub}}()$ - шифрование на открытом ключе.\\
+		$f()$ - общеизвестная однонаправленная функция. 
+		
+	}
+
+		\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протоколы основанные на ассиметричных криптосистемах}
+		
+		\textbf{NSPK без 3-ей стороны}
+		
+		\begin{enumerate}
+			\item $A -> B: E_{K_{B}^{pub}}(K_A || ID_A)$
+			\item $B -> A: E_{K_{A}^{pub}}(K_A || K_B)$
+			\item $A -> B: E_{K_{B}^{pub}}(K_B)$
+			\item $A,B:	\ \ \ \ \ KS = f(K_A, K_B)$   
+		\end{enumerate}
+		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Смешанные протоколы}
+		
+		\textbf{EKE(Encrypted Key Exchange)}\\
+		$K_{AB} = P $ - пароль
+		\begin{enumerate}
+			\item $A -> B: ID_A || E_P(K_A^{pub})$
+			\item $B -> A: E_P(E_{K_A^{pub}}(KS))$
+			\item $A -> B: E_{KS}(R_A)$
+			\item $B -> A: E_{KS}(R_A || R_B)$	
+			\item $A -> B: E_{KS}(R_B)$		   
+		\end{enumerate}
+	
+		\bigskip
+		
+		\textbf{Bilateral Key Exchange with Public Key}\\
+		\begin{enumerate}
+			\item $B -> A: ID_B || E_{K_A^{pub}}(R_B || ID_B)$
+			\item $A -> B: E_{K_B^{pub}}(h(R_B) || R_A || ID_A || KS)$
+			\item $B -> A: E_{KS}(h(R_A))$   
+		\end{enumerate}
+	}
+	
+	\frame{
+	\frametitle{Протоколы распределения ключей}
+	\framesubtitle{Смешанные протоколы}
+		\textbf{SPX}\\
+		$a_A, a_B$ - сетевые адресса.\\
+		$L, L_A, L_B$ - время жизни ключей (приватных и публичных) сеанса, пользователя $A$ и пользователя $B$ соответственно.\\
+		$m_A = (ID_A || ID_B || L_B || K_B^{pub})$\\
+		$m_B = (ID_B || ID_A || L_A || K_A^{pub})$
+		\begin{enumerate}
+			\item $A -> T: ID_B$
+			\item $T -> A: m_A || E_{K_{AT}}(h(m_a)) <- cert_{AB}$
+			\item $A -> B: ID_A || E_{K_A^{sec}}(ID_A || K_A^{pub} || L) || $ \\
+			$ E_{K_B^{pub}}(KS) || E_{K_A^{sec}}(E_{K_B^{pub}}(KS)) || t || E_{KS}(t) || a_A$   
+			\item $B -> T: ID_A$
+			\item $T -> B: m_B || E_{K_{BT}}(h(m_B)) <- cert_{BA}$
+			\item $B -> A: E_{KS}(t || a_B)$
+		\end{enumerate}
+
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Протоколы с использованием ЭЦП}
+		
+		\begin{enumerate}
+			\item $A -> B:  E_{K_B^{pub}}(KS || t) || sign_A(ID_B || KS || t)$
+			\item $A -> B:  E_{K_B^{pub}}(KS || t || sign_A(ID_B || KS || t))$
+			
+			\item $A -> B: t || E_{K_B^{pub}}(ID_A ||KS) || sign_A(ID_B || t ||  E_{K_B^{pub}}(ID_A ||KS))$
+					   
+		\end{enumerate}
+		
+		\bigskip
+		
+		\textbf{Сертификаты открытых ключей}
+		$cert_A = (ID_A || K_A^{pub} || t || sign_T(ID_A || K_A^{pub} || t))$	
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Протоколы с использованием ЭЦП}
+		
+		\textbf{X.509}\\
+		$d_A = (T_A || R_A || ID_B || text_1 || E_{K_B^{pub}}(K_A))$ \\
+		
+		$d_B = (T_B || R_B || ID_A || text_2 || E_{K_A^{pub}}(K_B))$
+		\begin{enumerate}
+			\item $A -> B: cert_A || d_A || sign_A(d_A)$
+			\item $B -> A: cert_B || d_B || sign_B(d_B)$
+			
+			\item $A -> B: R_B || ID_B || sign_A(R_B || ID_B)$
+			\item $A,B:\ \ \ \ \ KS = f(K_A, K_B)$
+		\end{enumerate}
+	
+		Шаг (3) необязателен, выполняется только если нужно подтвержденрие.		
+	}
+
+	\frame{
+	\frametitle{Протоколы распределения ключей}
+	\framesubtitle{Протоколы с использованием ЭЦП}
+	
+	\textbf{Денниг -Сакко}\\
+	\begin{enumerate}
+		\item $A -> S: ID_A || ID_B$
+		\item $S -> A: cert_A || cert_B$
+		\item $A -> B: cert_A || cert_B || E_{K_B^{pub}}(KS || t_A || sign_A(kS || T_A))$
+		\item $A,B:\ \ \ \ \ KS = f(K_A, K_B)$
+	\end{enumerate}
+	
+	Шаг (3) необязателен, выполняется только если нужно подтвержденрие.		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протокол MTI}
+		
+		\begin{enumerate}
+			\item Предварительный этап: \\
+				  Выбираются следующие параметры: $p, \alpha$, где $p$ - простое число, $a \in Z^{*}_p$\\
+				  $A$ выбирает $a,\ 1 \leq a \leq p -2$, $z_A = \alpha ^ a\ (mod\ p)$.\\
+				  $B$ выбирает $b,\ 1 \leq b \leq p -2$, $z_B = \alpha ^ b\ (mod\ p)$.\\
+			\item $A -> B: m_{AB} = \alpha^x\ (mod\ p),\ 1 \leq x \leq p - 2,\ x $ - случайное
+			\item $B -> A: m_{BA} = \alpha^y\ (mod\ p),\ 1 \leq y \leq p - 2,\ y $ - случайное
+		\end{enumerate}
+		
+		\bigskip		
+		Варианты построения ключа:\\
+		\begin{table}[]
+			\begin{tabular}{llllll}
+				№&  $m_AB$&  $m_BA$&  $K_A$&  $K_B$&  K\\
+				1&  $\alpha^x$&  $\alpha^y$&  $m_{BA}^a z^x_B$&  $m_{AB}^b z^y_A$&  $\alpha^{bx+ay}$\\
+				2&  $z^x_B$&  $z^y_A$&  $m_{BA}^{a^{-1}}\alpha^x$&  $m_{AB}^{b^{-1}}\alpha^y$&  $\alpha^{x+y}$\\
+				3&  $z^x_B$&  $z^y_A$&  $m_{BA}^{a^{-1}x}$&  $m_{AB}^{b^{-1}y}$&  $\alpha^{xy}$\\
+				4&  $z^x_B$&  $z^Y_A$&  $m_{BA}^{x}$&  $m_{AB}^{y}$& $\alpha^{bxay}$
+			\end{tabular}
+		\end{table}
+	}
+	
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\subtitle{Предварительное распределение ключей}
+		
+		Предварительное распределение ключей нужно для уменьшения объёма распределяемой и хранимой информации. \\
+		\bigskip
+		$A_1, ..., A_n$ - абоненты.\\
+		$K$ - множество ключей. \\
+		$P$ - множество исходных ключевых параметров ($p_i$ - пароль каждого абонента).\\
+		$Q$ - множество значений ключевых материалов абонентов ($q_i$ - секрет каждого абонента). \\
+		$R$ - множество значений открытой информации ($r_1, ..., r_n$ - в открытом доступе). \\
+
+		
+	}
+
+	\frame{
+	\frametitle{Протоколы распределения ключей}
+	\subtitle{Предварительное распределение ключей}
+
+	Схема предварительного распределения ключей:\\
+	$S(n) = (K,P, Q,R, A_0, A_1)$ \\
+	
+	\begin{enumerate}
+		\item $A_0 : P \times R -> Q$ - алгоритм формирования секретных ключевых материалов.\\
+		$A_0(p_i, r_i) = q_i,\ 1 \leq i \leq n$
+		\item $A_1 : Q \times R -> K$ - алгоритм вычисления ключа парной связи.\\
+		$A_1(q_i, r_j) = A_1(q_j, r_i),$\\
+		$K_{ij} = A_1(q_i, r_j), i=j : $ либо не рассматривается либо некий личный секретный ключ.\\
+		
+	\end{enumerate}
+		$A_0(p, r_i) = Q_i \subseteq K^{t_i} \subseteq Q, \ 1 \leq i \leq n$
+	}
+	
+	\frame{
+	\frametitle{Протоколы распределения ключей}
+	\subtitle{Предварительное распределение ключей}
+	
+	\textbf{Предложение 1}\\
+	$\forall r_i \in R,\ q_i \in Q,\ 1 \leq i \leq n$\\
+	$A_0(p, r_i) = q_i $ - имеет одинаковое число решений относительно $p \in P$.
+	
+	\bigskip
+	
+	\textbf{Предложение 2}\\
+	$\forall r_i \in R,\ k \in K,\ 1 \leq i \leq n$\\
+	$A_1(q_i, r_i) = k $ - имеет одинаковое число решений относительно $q_i \in Q$.
+	
+}	
+
+	
+	
+	\frame {
+		\frametitle{}
+		
+	}
+	
+	
+	\frame {
+		\begin{figure}
+			\includegraphics[width=0.8\linewidth]{index1.jpeg}
+			
+		\end{figure}
+	}
+	
+\end{document}
