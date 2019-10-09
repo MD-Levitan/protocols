@@ -13,9 +13,9 @@
 \title{Криптографические протоколы}
 \subtitle{Лекция 1}
 
-\usebackgroundtemplate{
-	\includegraphics[width=\paperwidth,height=\paperheight]{../bsu.jpg}
-}
+%\usebackgroundtemplate{
+%	\includegraphics[width=\paperwidth,height=\paperheight]{../bsu.jpg}
+%}
 
 \setbeamercolor{frametitle}{bg=cyan!10}
 \usepackage{color}
@@ -25,27 +25,24 @@
 \begin{document}
 	
 	\frame {
-		\color{white}
 		\titlepage
 	}
 	\frame{
 		\frametitle{Содержание учебного материала}
 		%\framesubtitle{An Example of Lists}
 		\begin{itemize}
-			\color{white}
-			\item Основные понятия
-			\item Атаки на протоколы
-			\item Управление ключами, их классификация и жизненный цикл
-			\item Протоколы аутентификации
-			\item Протоколы распределения и обновления ключей
-			\item Защищенные каналы передачи данных (IPSEC, SSL/TLS, ...)
-			\item Протоколы электронного голосования
+			\item Основные понятия.
+			\item Атаки на протоколы.
+			\item Управление ключами, их классификация и жизненный цикл.
+			\item Протоколы аутентификации.
+			\item Протоколы распределения и обновления ключей.
+			\item Протоколы электронного голосования.
+			\item Защищенные каналы передачи данных (IPSEC, SSL/TLS, ...).
 		\end{itemize}
 	}
 	\frame{
 		\frametitle{Литература}
 		\begin{itemize}
-			\color{white}
 			\item А.В. Соколов "Защита информации в распределенных корпаративных сетях и системах"
 			\item А.М. Миронов "Криптографические протоколы"
 		\end{itemize}
@@ -54,7 +51,6 @@
 	\frame{
 		\frametitle{Список основных обозначений}
 		\begin{itemize}
-			\color{white}
 			\item $A, B$ - участники инфор. обмена
 			\item $S$ - центр распределения ключей (3-ая доверенная сторона)
 			\item $I$ - злоумышленник
@@ -72,14 +68,13 @@
 	\frame{
 	\frametitle{Список основных обозначений}
 	\begin{itemize}
-		\color{white}
 		\item $T_X$ - временная отметка, поставленная $X$
 		\item $TVP_x$ - одноразовый параметр $X$
 		\item $T_x/N_x$ - одноразовый параметр $X$, который является либо временной меткой, либо порядковым номером
-		\item $E_k(M)$ - 
-		\item $D_k(M)$ - 
-		\item $MAC_k(M)$ - 
-		\item $h, h(M)$ - 
+		\item $E_k(M)$ - шифрование на ключе $k$
+		\item $D_k(M)$ - расшифрование на ключе $k$
+		\item $MAC_k(M)$ - выработка имитовставки.
+		\item $h, h(M)$ - выработка хэша
 		\item $Sign_{K_x^{sec}}(M)$ - ЭЦП сообщения $M$ участника $X$
 		\item $Cert_x$ - сертификат участника $X$
 		\item $M_1 || M_2$ - конкатенация
@@ -87,8 +82,7 @@
 	}
 	\frame {
 	\frametitle{Определения}
-	\color{white}
-
+	
 	\textbf{Определение 1}
 	
 	\bigskip
@@ -117,7 +111,6 @@
 	\frame {
 	\frametitle{Свойства протокола}
 		\begin{enumerate}
-			\color{white}
 			\item Действия имеют строгую очередность от начала и до конца (ни одно действие не выполняется, пока не закончится другое).
 			
 			\item Должно быть точно определено каждое действие.
@@ -130,7 +123,6 @@
 		\frametitle{Классификация криптографических протоколов}
 		
 		\begin{enumerate}
-			\color{white}
 			\item на основе задач
 			
 			\item по числу  участников в протоколе
@@ -142,10 +134,8 @@
 	\frame {
 		\frametitle{Модель угрозы Долева-Яо}
 		\framesubtitle{(Dolev-Yao)}
-		\color{white}
 		Возможности злоумышленника:
 		\begin{enumerate}
-			\color{white}
 			\item[+] перехватывать $\forall$ сообщение в сети
 			\item[+] вступать в контакт с другим пользователем
 			\item[+] получать сообщение от $\forall$ пользователя
