@@ -1,8 +1,5 @@
 \documentclass{beamer}
 
-
-
-
 \usepackage[T1,T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 
@@ -10,7 +7,9 @@
 \usepackage{blindtext}
 \usepackage{ mathrsfs }
 \usepackage[russian,english]{babel}
-%\usepackage{ dsfont }
+\usepackage{listings}
+\lstset{language=Pascal} 
+
 
 \author{Деркач Максим Юрьевич}
 \title{Криптографические протоколы}
@@ -22,8 +21,11 @@
 	\frame {
 		\titlepage
 	}
+
 	\frame {
 		\frametitle{Ссылки}
+		
+		\url{https://mmi.sgu.ru/system/files_force/2019/03/114-121ratseev-rostov.pdf}
 		
 	}
 	
@@ -91,6 +93,8 @@
 			
 		\end{enumerate}
 	
+		\bigskip
+	
 		Шаг 3 могут повторять до тех пор пока $B$ не примет решение, что протокол пройден.
 		
 		Выполнение данного протокола $t$ раз гарантирует, что $A$ - подлинный участник.
@@ -104,11 +108,16 @@
 		$p,\ q$ - простые, $p \neq q,\ n = pq,\ |p|,|q| >= 512 $ \\
 		$A$ :  секретный ключ - $a \in  Z_n^*,\ (a, n) = 1$ \\
 		\quad \quad открытый ключ  - $b = (a ^ {-1}) ^ 2\ (mod\ n)$ \\
+		
+		\bigskip
+		
 		\begin{enumerate}
 			\item $A -> B: \gamma = r ^ 2\ (mod\ n), 1 \leq r \leq n - 1,\ r - $ простое число
 			\item $B -> A: x \in \{0,1\}$
 			\item $A -> B: y = ra^x \ (mod\ n)$
 		\end{enumerate}
+	
+		\bigskip
 	
 		 $B$ проверяет $y^2 b ^x \equiv \gamma (mod\ n)$ \\
 		 Шаги повторяются $t$ раз. \\
@@ -153,17 +162,20 @@
 		
 		$p,\ q$ - простые, $p \neq q,\ n = pq,\ |p|,|q| >= 512 $ \\
 		$A$ : \\
+		\bigskip
 		
 		секретный ключ - $a = (s_1, ..., s_k),\ s_i \in \  Z_n^*,\ (s_i, n) = 1,\ \forall i \in \{1,..., k\} $ \\
 		
+		\bigskip
 		открытый ключ  - $b = (v_1,..., v_k),\  v_i = (s_i ^ 2)^{-1}\ (mod\ n),\ \forall i \in \{1,..., k\} $ \\
 		
+		\bigskip
 		\begin{enumerate}
 			\item $A -> B: \gamma = r ^ 2\ (mod\ n), 1 \leq r \leq n - 1,\ r - $ простое число
 			\item $B -> A: x = (x_1, ..., x_i)\in \{0,1\}^k$
 			\item $A -> B: y = r(s_1^{x_1}...s_k^{x_k}) \ (mod\ n)$
 		\end{enumerate}
-		
+		\bigskip
 		$B$ проверяет $y^2(v_1^{x_1}...v_k^{x_k}) \equiv \gamma (mod\ n)$ \\
 		Шаги повторяются $t$ раз. \\
 		
@@ -177,12 +189,14 @@
 		$p,\ q$ - простые, $q | (p -1),\ \alpha \in Z_p,\ ord(\alpha) = q$ \\
 		$A$ :  секретный ключ - $ 1 \leq a  \leq  q -2$ \\
 		\quad \quad открытый ключ  - $b = \alpha ^ {-a} \ (mod\ p)$ \\
+		
+		\bigskip
 		\begin{enumerate}
 			\item $A -> B: \gamma = \alpha ^ r \ (mod\ p),\ 1 \leq r \leq q - 2$
 			\item $B -> A: 0 \leq x \leq q - 1$
 			\item $A -> B: y = (r + ax) \ (mod\ q)$
 		\end{enumerate}
-		
+		\bigskip
 		$B$ проверяет $\alpha^y b ^ x \equiv \gamma (mod\ p)$ \\
 		Шаги повторяются $t$ раз. \\
 		
@@ -227,16 +241,17 @@
 		
 		$p,\ q$ - простые, $q | (p -1),\ \alpha_1,  \alpha_2 \in Z_p $\\
 		$ord(\alpha_1) = ord(\alpha_2) = q$ \\
-		
+		\bigskip
 		$A$ :  секретный ключ - $(a_1, a_2), \ 1 \leq a_1, a_2  \leq  q -2$ \\
 		\quad \quad открытый ключ  - $b = \alpha_1 ^ {-a_1}  \alpha_2 ^ {-a_2}\ (mod\ p)$ \\
+		\bigskip
 		\begin{enumerate}
 			\item $A -> B: \gamma = \alpha_1 ^ {r_1} \alpha_2 ^ {r_2} \ (mod\ p),\ 1 \leq r_1, r_2 \leq q - 2$
 			\item $B -> A: 0 \leq x \leq q - 1,\ x < 2^t$
 			\item $A -> B:			 y_1 = (r_1 + a_1x) \ (mod\ q) $\\
 			\quad \quad\quad \quad\ $y_2 = (r_2 + a_2x) \ (mod\ q) $
 		\end{enumerate}
-		
+		\bigskip
 		$B$ проверяет $\alpha_1^{y_1} \alpha_2^{y_2} b ^ x \equiv \gamma (mod\ p)$ \\
 		\begin{itemize}
 			\item Полнота: \\
@@ -251,15 +266,16 @@
 	\framesubtitle{Протокол GQ}
 	
 	$p,\ q$ - простые, $n = pq,\ b \geq 3,\ (b,\ \varphi(n))=1 $\\
-	
+	\bigskip
 	$A$ :  секретный ключ - $u \in Z_n^*,\ (u,\ n) = 1$ \\
 	\quad \quad открытый ключ  - $v = (u^{-1})^b\ (mod\ n)$ \\
+	\bigskip
 	\begin{enumerate}
 		\item $A -> B: \gamma = r^b \ (mod\ n),\ 1 \leq r_1, r_2 \leq n - 2$
 		\item $B -> A: 0 \leq x \leq b - 1,\ x < 2^t$
 		\item $A -> B: y = ru^x\ (mod\ n) $
 	\end{enumerate}
-	
+	\bigskip
 	$B$ проверяет $v^x y^b \equiv \gamma (mod\ n)$ \\
 	\begin{itemize}
 		\item Полнота: \\
