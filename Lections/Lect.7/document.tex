@@ -112,6 +112,19 @@
 	
 	}
 
+\frame{
+	\frametitle{Протоколы распределения ключей}
+	\framesubtitle{Классификация протоколов распределения ключей}
+	
+	\includegraphics[width=0.9\linewidth]{scheme1.jpg}
+}
+
+\frame{
+	\frametitle{Протоколы распределения ключей}
+	\framesubtitle{Классификация протоколов распределения ключей}
+	
+	\includegraphics[width=1\linewidth]{scheme2.jpeg}
+}
 
 	\frame{
 		\frametitle{Протоколы распределения ключей}
@@ -232,7 +245,6 @@
 		 \quad \quad \quad  \quad $ m_b = E_{K_{BS}}(ID_A || KS)$
 			\item $A -> B: m_b || E_{KS}(R_B)$			   
 		\end{enumerate}
-		$E_{KS}(R_B)$ - нет проверки новизны.
 			
 	}
 
@@ -284,6 +296,26 @@
 
 	\frame{
 		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Needham-Schroeder (NSSK)}
+		
+		
+		\textbf{Атака} \\
+		
+		Если ключ $KS$	скомпрометирован, возможна атака на протокол методом повтора сеанса: берутся	сообщения из прошлого сеанса с ключом $KS^{*}$: 
+		
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B || R_A$
+			\item $S -> A: E_{K_{AS}}(R_A || ID_B || KS || E_{K_{BS}}(KS || ID_A))$
+			
+			\item $I(A) -> B: E_{K_{BS}}(KS^{*} || ID_A)$
+			\item $B -> I(A): E_{KS^{*}}(R_B)$
+			\item $I(A) -> B: E_{KS^{*}}(R_B - 1)$			   
+		\end{enumerate}
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
 		\subtitle{Трёхсторонние протоколы}
 		
 		\textbf{Протокол Деннинг - Сакко}
@@ -311,90 +343,6 @@
 		
 	}
 
-		\frame{
-		\frametitle{Протоколы распределения ключей}
-		\subtitle{Трёхсторонние протоколы}
-		
-		\textbf{Rellare}
-		$K_{AS} = (K^C_{AS} || K^M_{AS})$
-		\begin{enumerate}
-			\item $A -> B: ID_A || R_A$
-			\item $B -> S: ID_A || ID_B || R_A || R_B$
-			
-			\item $S -> A: E_{K^C_{AS}}(KS) || M_{K^M_{AS}}(ID_A || ID_B || R_A || E_{K^C_{AS}}(KS))$
-			\item $S -> B: E_{K^C_{BS}}(KS) || M_{K^M_{BS}}(ID_B || ID_A || R_B || E_{K^C_{BS}}(KS))$	   
-		\end{enumerate}
-		
-		\bigskip
-		
-		\textbf{Протокол Неймана - Стабалабайки}
-		
-		Этап 1
-		\begin{enumerate}
-			\item $A -> B: ID_A || R_A$
-			\item $B -> S: ID_B || E_{K_{BS}}(ID_A || R_A || T_B) || R_B$
-			\item $S -> A: E_{K_{AS}}(ID_B || R_A || KS || T_B) || E_{K_{BS}}(ID_A || KS || T_B ) || R_B$
-			
-			\item $A -> B: E_{K_{BS}}(ID_A || KS || T_B ) || E_{KS}(R_B)$			   
-		\end{enumerate}
-		Этап 2
-		\begin{enumerate}
-		\item $A -> B: R_A^{'} || E_{K_{BS}}(ID_A || KS || T_B )$
-		\item $B -> A: R_B^{'} || E_{KS}(R_A^{'})$
-		\item $A -> B: E_{KS}(R_B^{'})$			   
-		\end{enumerate}
-		
-	}
-
-		\frame{
-		\frametitle{Протоколы распределения ключей}
-		\subtitle{Трёхсторонние протоколы}
-		
-		\textbf{Атака 1}
-		Этап 1
-		\begin{enumerate}
-			\item $I(A) -> B: ID_A || R_A$
-			\item $B -> I(S): ID_B || E_{K_{BS}}(ID_A || R_A || T_B) || R_B$
-			\item $-------------$
-			
-			\item $I(A) -> B: E_{K_{BS}}(ID_A || R_A || T_B ) || E_{R_A}(R_B)$			   
-		\end{enumerate}
-		Этап 2
-		\begin{enumerate}
-			\item $I(A) -> B: R_A^{'} || E_{K_{BS}}(ID_A || R_A || T_B )$
-			\item $B -> I(A): R_B^{'} || E_{R_A}(R_A^{'})$
-			\item $I(A) -> B: E_{R_A}(R_B^{'})$			   
-		\end{enumerate}
-		
-	}
-
-	
-
-	\frame{
-		\frametitle{Протоколы распределения ключей}
-		\subtitle{Трёхсторонние протоколы}
-		
-		\textbf{Атака 2}
-		Этап 1
-		\begin{enumerate}
-			\item $A -> B: ID_A || R_A$
-			\item $B -> S: ID_B || E_{K_{BS}}(ID_A || R_A || T_B) || R_B$
-			\item $S -> A: E_{K_{AS}}(ID_B || R_A || KS || T_B) || E_{K_{BS}}(ID_A || KS || T_B ) || R_B$
-			\item $A -> B: E_{K_{BS}}(ID_A || KS || T_B ) || E_{KS}(R_B) || E_{KS}(R_B) $			   
-		\end{enumerate}
-		
-		Этап 2
-		\begin{enumerate}
-			\item $I(A) -> B: R_A^{'} || E_{K_{BS}}(ID_A || KS || T_B )$
-			\item $B -> I(A): R_B^{'} || E_{KS}(R_A^{'})$
-			
-			\item[1'] $I(A) -> B: R_B^{'} || E_{K_{BS}}(ID_A || KS || T_B )$
-			\item[2'] $B -> I(A): R_B^{''} || E_{KS}(R_B^{'})$
-			
-			\item $I(A) -> B: E_{KS}(R_B^{'})$			   
-		\end{enumerate}
-		
-	}
 	
 		\frame{
 		\frametitle{Протоколы распределения ключей}
@@ -440,31 +388,6 @@
 	\end{enumerate}
 	
 	}
-	
-	\frame{
-		\frametitle{Протоколы распределения ключей}
-		\subtitle{ISO/IEC 9782-2}
-		
-		\begin{enumerate}
-			\item $A -> S: TVP_A || ID_B || text$
-			\item $S -> A: text_4 ||  E_{K_{AS}}(TVP_A |KS || ID_B ||text_3) || E_{K_{BS}}(T_S / N_S || KS || ID_A || text_2)$
-			
-			\item $A -> B: text_6 || E_{K_{BS}}(T_S / N_S || KS || ID_A || text_2) || E_{KS}(T_A / N_A || ID_B || text_5)$
-			\item $B -> A: text_5 || E_{KS}(T_B / N_B || ID_A || text_2)$			   
-		\end{enumerate}
-		
-		\bigskip
-		
-		\begin{enumerate}
-			\item $B -> A: R_B || text_1$
-			\item $A -> S: R_A^{'} || R_B ID_B || tetx_2$
-			\item $S -> A: text_5 ||  E_{K_{AS}}(R_A^{'} |KS || ID_B ||text_4) || E_{K_{BS}}(R_B || KS || ID_A || text_3)$
-			\item $A -> B: text_7 || E_{K_{BS}}(R_B || KS || ID_A || text_3) || E_{KS}(R_A || R_B || text_6)$
-			
-			\item $B -> A: text_9 || E_{KS}(R_B || R_A || tetx_8)$
-			\end{enumerate}
-		
-	}
 
 	\frame{
 		\frametitle{Протоколы распределения ключей}
@@ -483,15 +406,143 @@
 	}
 	
 	
-	\frame {
-		\frametitle{}
 		
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протоколы основанные на ассиметричных криптосистемах}
+		
+		\textbf{Needham-Schroeder Public Key (NSPK)}
+		
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B $
+			\item $S -> A: E_{K_{S}^{sec}}(K_B^{pub} || ID_B)$
+			
+			\item $A -> B: E_{K_{B}^{pub}}(K_A || ID_A)$
+			\item $B -> S: ID_B || ID_A$
+			\item $S -> B: E_{K_{S}^{sec}}(K_A^{pub} || ID_A)$
+			
+			\item $B -> A: E_{K_{A}^{pub}}(K_B || K_A)$
+			\item $A -> B: E_{K_{B}^{pub}}(K_B)$
+			\item $A,B:	\ \ \ \ \ KS = f(K_A, K_B)$   
+		\end{enumerate}
+		
+		$E_{K_{S}^{sec}}()$ - подпись на секретном ключе.\\
+		$E_{K_{B}^{pub}}()$ - шифрование на открытом ключе.\\
+		$f()$ - общеизвестная однонаправленная функция. 
+		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протоколы основанные на ассиметричных криптосистемах}
+		
+		\textbf{NSPK без 3-ей стороны}
+		
+		\begin{enumerate}
+			\item $A -> B: E_{K_{B}^{pub}}(K_A || ID_A)$
+			\item $B -> A: E_{K_{A}^{pub}}(K_A || K_B)$
+			\item $A -> B: E_{K_{B}^{pub}}(K_B)$
+			\item $A,B:	\ \ \ \ \ KS = f(K_A, K_B)$   
+		\end{enumerate}
+		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Смешанные протоколы}
+		
+		\textbf{EKE(Encrypted Key Exchange)}\\
+		$K_{AB} = P $ - пароль
+		\begin{enumerate}
+			\item $A -> B: ID_A || E_P(K_A^{pub})$
+			\item $B -> A: E_P(E_{K_A^{pub}}(KS))$
+			\item $A -> B: E_{KS}(R_A)$
+			\item $B -> A: E_{KS}(R_A || R_B)$	
+			\item $A -> B: E_{KS}(R_B)$		   
+		\end{enumerate}
+		
+		\bigskip
+		
+		\textbf{Bilateral Key Exchange with Public Key}\\
+		\begin{enumerate}
+			\item $B -> A: ID_B || E_{K_A^{pub}}(R_B || ID_B)$
+			\item $A -> B: E_{K_B^{pub}}(h(R_B) || R_A || ID_A || KS)$
+			\item $B -> A: E_{KS}(h(R_A))$   
+		\end{enumerate}
+	}
+	
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протоколы с использованием ЭЦП}
+		
+		\textbf{Сертификаты открытых ключей}
+		$cert_A = (ID_A || K_A^{pub} || t || sign_T(ID_A || K_A^{pub} || t))$
+		
+		\bigskip	
+		
+		\textbf{X.509}\\
+		$d_A = (T_A || R_A || ID_B || text_1 || E_{K_B^{pub}}(K_A))$ \\
+		
+		$d_B = (T_B || R_B || ID_A || text_2 || E_{K_A^{pub}}(K_B))$
+		\begin{enumerate}
+			\item $A -> B: cert_A || d_A || sign_A(d_A)$
+			\item $B -> A: cert_B || d_B || sign_B(d_B)$
+			
+			\item $A -> B: R_B || ID_B || sign_A(R_B || ID_B)$
+			\item $A,B:\ \ \ \ \ KS = f(K_A, K_B)$
+		\end{enumerate}
+		
+		Шаг (3) необязателен, выполняется только если нужно подтвержденрие.		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Протоколы с использованием ЭЦП}
+		
+		\textbf{Денниг -Сакко}\\
+		\begin{enumerate}
+			\item $A -> S: ID_A || ID_B$
+			\item $S -> A: cert_A || cert_B$
+			\item $A -> B: cert_A || cert_B || E_{K_B^{pub}}(KS || t_A || sign_A(kS || T_A))$
+			\item $A,B:\ \ \ \ \ KS = f(K_A, K_B)$
+		\end{enumerate}
+		
+		Шаг (3) необязателен, выполняется только если нужно подтвержденрие.		
+	}
+	
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{}
+		
+		\textbf{Протокол MTI}
+		
+		\begin{enumerate}
+			\item Предварительный этап: \\
+			Выбираются следующие параметры: $p, \alpha$, где $p$ - простое число, $a \in Z^{*}_p$\\
+			$A$ выбирает $a,\ 1 \leq a \leq p -2$, $z_A = \alpha ^ a\ (mod\ p)$.\\
+			$B$ выбирает $b,\ 1 \leq b \leq p -2$, $z_B = \alpha ^ b\ (mod\ p)$.\\
+			\item $A -> B: m_{AB} = \alpha^x\ (mod\ p),\ 1 \leq x \leq p - 2,\ x $ - случайное
+			\item $B -> A: m_{BA} = \alpha^y\ (mod\ p),\ 1 \leq y \leq p - 2,\ y $ - случайное
+		\end{enumerate}
+		
+		\bigskip		
+		Варианты построения ключа:\\
+		\begin{table}[]
+			\begin{tabular}{llllll}
+				№&  $m_{AB}$&  $m_{BA}$&  $K_A$&  $K_B$&  K\\
+				1&  $\alpha^x$&  $\alpha^y$&  $m_{BA}^a z^x_B$&  $m_{AB}^b z^y_A$&  $\alpha^{bx+ay}$\\
+				2&  $z^x_B$&  $z^y_A$&  $m_{BA}^{a^{-1}}\alpha^x$&  $m_{AB}^{b^{-1}}\alpha^y$&  $\alpha^{x+y}$\\
+				3&  $z^x_B$&  $z^y_A$&  $m_{BA}^{a^{-1}x}$&  $m_{AB}^{b^{-1}y}$&  $\alpha^{xy}$\\
+				4&  $z^x_B$&  $z^Y_A$&  $m_{BA}^{x}$&  $m_{AB}^{y}$& $\alpha^{bxay}$
+			\end{tabular}
+		\end{table}
 	}
 
 
 	\frame {
 	\begin{figure}
-		\includegraphics[width=0.8\linewidth]{index1.jpeg}
+		\includegraphics[width=0.8\linewidth]{memes1.jpeg}
 		
 	\end{figure}
 	}
