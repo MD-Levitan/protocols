@@ -17,7 +17,7 @@
 \author{Деркач Максим Юрьевич}
 \title{Криптографические протоколы}
 \subtitle{Лекция 5 \\ Протоколы сильной аутентификации }
-
+\setbeamercolor{frametitle}{bg=cyan!10}
 
 %\usetheme{lucid}
 \begin{document}
@@ -115,7 +115,7 @@
 		\frametitle{Протоколы сильной аутентификации}
 		\framesubtitle{На основе симметричных алгоритмов шифрования}
 		
-		\textbf{Протокол Отвея-Риса}
+		\textbf{Протокол Отвея-Риса*}
 		\begin{enumerate}
 			\item $A -> B: ID_A || ID_B || K_{AT}(ID_A || ID_B || N_A || R_A) || N_A$
 			\item $B -> T: ID_A || ID_B || K_{AT}(ID_A || ID_B || N_A || R_A) ||$\\ 
@@ -125,11 +125,13 @@
 			\item $A -> B: E_{K}(R_B)$
 		\end{enumerate}
 	
+		\bigskip
+	
 		\textbf{Протокол с использованием хэш-функции}
 		\begin{enumerate}
-			\item $B -> A: R_B || text_1$
-			\item $A -> B: text_3 || H_{K_{AB}}(R_A || R_B || ID_B || text_2)$
-			\item $B -> A: text_5 || H_{K_{AB}}(R_B || R_A || ID_A || text_4)$
+			\item $B -> A: R_B$
+			\item $A -> B: R_A || H_{K_{AB}}(R_A || R_B || ID_B)$
+			\item $B -> A: H_{K_{AB}}(R_B || R_A || ID_A)$
 		\end{enumerate}
 	}
 	
@@ -137,7 +139,7 @@
 		\frametitle{Протоколы сильной аутентификации}
 		\framesubtitle{На основе асимметричных алгоритмов шифрования}
 		
-		\textbf{С использованием хэш-функции}
+		\textbf{С использованием хэш-функции*}
 		\begin{enumerate}
 			\item  $B -> A: h(R_B) || ID_B || E_{K_A}^{pub}(R_B || ID_B)$
 			\item  $A -> B: R_B$
@@ -198,19 +200,23 @@
 		\frametitle{Протоколы сильной аутентификации}
 		\framesubtitle{С использованием ЭЦП}
 		
+		
+		\textbf{Mech 1.}
 		\begin{enumerate}
-			\item  $A -> B: cert_A || T_A / N_A || ID_B || text_2 || sign_A(T_A/N_A || ID_B || text1) $
-			\item  $B -> A: cert_B || T_B / N_B || ID_A || text_4 || sign_B(T_B/N_B || ID_A || text3) $
+			\item  $A -> B: cert_A || T_A / N_A || ID_B || sign_A(T_A/N_A || ID_B || text1) $
+			\item  $B -> A: cert_B || T_B / N_B || ID_A || sign_B(T_B/N_B || ID_A || text3) $
 		\end{enumerate}	
 		
 		\bigskip
 		
 
+		\textbf{Mech 2.}
 		\begin{enumerate}
-			\item  $B -> A: R_B || text_1$
-			\item  $A -> B: cert_A || R_A || R_B || ID_B || text_3 || sign_A(R_A || R_B || ID_B || text_2)$
-			\item  $B -> A: cert_B || R_B || R_A || ID_A || text_5 || sign_B(R_B || R_A || ID_A || text_4)$
+			\item  $B -> A: R_B$
+			\item  $A -> B: cert_A || R_A || R_B || ID_B || sign_A(R_A || R_B || ID_B)$
+			\item  $B -> A: cert_B || R_B || R_A || ID_A || sign_B(R_B || R_A || ID_A)$
 		\end{enumerate}	
+
 	}
 
 	\frame{

@@ -15,6 +15,7 @@
 \author{Деркач Максим Юрьевич}
 \title{Криптографические протоколы}
 \subtitle{Лекция 7 \\ Протоколы распределения ключей (Часть 1)}
+\setbeamercolor{frametitle}{bg=cyan!10}
 
 
 %\usetheme{lucid}
@@ -130,7 +131,7 @@
 		\frametitle{Протоколы распределения ключей}
 		\framesubtitle{ISO/IEC 11770-2}
 		
-		\textbf{Mech. \#2 (Однораундовый протокол)}
+		\textbf{Mech. \#2 (Однораундовый протокол)*}
 		\begin{enumerate}
 			\item $A -> B: E_{K_{AB}}(KS)$
 		\end{enumerate}	
@@ -138,7 +139,7 @@
 		
 		\bigskip
 		
-		\textbf{Mech. \#1 (Однораундовый протокол)}
+		\textbf{Mech. \#1 (Однораундовый протокол)*}
 		
 		$TVP$ - переменная
 		\begin{enumerate}
@@ -228,7 +229,7 @@
 		\frametitle{Протоколы распределения ключей}
 		\framesubtitle{Трёхсторонние протоколы}
 		
-		\textbf{Wide-Mouth-Frag}
+		\textbf{Wide-Mouth-Frag*}
 		\begin{enumerate}
 			\item $A -> S: ID_A || E_{K_{AS}}(T_A || ID_B || KS)$
 			\item $S -> B: E_{K_{BS}}(T_S || ID_A || KS)$
@@ -318,7 +319,7 @@
 		\frametitle{Протоколы распределения ключей}
 		\subtitle{Трёхсторонние протоколы}
 		
-		\textbf{Протокол Деннинг - Сакко}
+		\textbf{Протокол Деннинг - Сакко*}
 		\begin{enumerate}
 			\item $A -> S: ID_A || ID_B$
 			\item $S -> A: E_{K_{AS}}(ID_B || KS || T_S || E_{K_{BS}}(ID_A || KS || T_S))$
@@ -351,10 +352,9 @@
 		
 		\textbf{Протокол Отвея - Рисса}\\
 		$M$ - ID сеанса. \\
-		$v$ - бит направленности. 
 		\begin{enumerate}
-			\item $A -> B: M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B)$
-			\item $B -> S: M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
+			\item $A -> B: M || ID_A || ID_B || E_{K_{AS}}(R_A || M || ID_A || ID_B)$
+			\item $B -> S: M || ID_A || ID_B || E_{K_{AS}}(R_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
 			
 			\item $S -> B: M || E_{K_{AS}}(R_A || KS) || E_{K_{BS}}(R_B || KS)$
 			\item $B -> A: M || E_{K_{AS}}(R_A || KS)$			   
@@ -372,7 +372,7 @@
 	$KS$ - 64 бита, $M$ - 32 бита, $ID_A, ID_B$ - 16 бит. \\ 
 	$len(KS) = len(M + ID_A + ID_A)$
 	\begin{enumerate}
-		\item[1'] $A -> I(B): M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B)$	
+		\item[1'] $A -> I(B): M || ID_A || ID_B || E_{K_{AS}}(R_A || M || ID_A || ID_B)$	
 		\item[4'] $I(B) -> A: M || E_{K_{AS}}(R_A || M || ID_A || ID_B)$	   
 	\end{enumerate}
 
@@ -380,11 +380,11 @@
 		\bigskip
 	\textbf{Атака 2}
 	\begin{enumerate}
-		\item $A -> B: M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B)$
-		\item $B -> I(S): M || ID_A || ID_B || E_{K_{AS}}(vR_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
+		\item $A -> B: M || ID_A || ID_B || E_{K_{AS}}(R_A || M || ID_A || ID_B)$
+		\item $B -> I(S): M || ID_A || ID_B || E_{K_{AS}}(R_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
 		
-		\item $I(S) -> B: M || E_{K_{AS}}(vR_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
-		\item $B -> A: M ||E_{K_{AS}}(vR_A || M || ID_A || ID_B) $			   
+		\item $I(S) -> B: M || E_{K_{AS}}(R_A || M || ID_A || ID_B) || E_{K_{BS}}(R_B || M || ID_A || ID_B)$
+		\item $B -> A: M ||E_{K_{AS}}(R_A || M || ID_A || ID_B) $			   
 	\end{enumerate}
 	
 	}
@@ -393,7 +393,7 @@
 		\frametitle{Протоколы распределения ключей}
 		\subtitle{ISO/IEC 11770-2}
 		
-		\textbf{Mech. \#10}
+		\textbf{Mech. \#10*}
 		
 		\begin{enumerate}
 			\item $A -> S: TVP_A || ID_B$
@@ -463,7 +463,7 @@
 		
 		\bigskip
 		
-		\textbf{Bilateral Key Exchange with Public Key}\\
+		\textbf{Bilateral Key Exchange with Public Key*}\\
 		\begin{enumerate}
 			\item $B -> A: ID_B || E_{K_A^{pub}}(R_B || ID_B)$
 			\item $A -> B: E_{K_B^{pub}}(h(R_B) || R_A || ID_A || KS)$
@@ -500,15 +500,13 @@
 		\frametitle{Протоколы распределения ключей}
 		\framesubtitle{Протоколы с использованием ЭЦП}
 		
-		\textbf{Денниг -Сакко}\\
+		\textbf{Денниг -Сакко*}\\
 		\begin{enumerate}
 			\item $A -> S: ID_A || ID_B$
 			\item $S -> A: cert_A || cert_B$
 			\item $A -> B: cert_A || cert_B || E_{K_B^{pub}}(KS || t_A || sign_A(kS || T_A))$
 			\item $A,B:\ \ \ \ \ KS = f(K_A, K_B)$
-		\end{enumerate}
-		
-		Шаг (3) необязателен, выполняется только если нужно подтвержденрие.		
+		\end{enumerate}	
 	}
 	
 	\frame{
