@@ -227,14 +227,52 @@
 
 	\frame{
 		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Атака на Бесключевой протокол Шамира}
+		
+		\bigskip
+		\textbf{Атака повторением (Replay Attack)}
+		
+		\bigskip
+		\begin{enumerate}
+			\item $A -> B: E_{K_A}(KS)$
+			\item $I(B) -> A: E_{K_A}(KS)$
+			\item $A -> B: D_{K_A}(E_{K_A}(KS)) = KS$ 
+		\end{enumerate}
+	
+		\bigskip
+		Можно защитить протокол от этой атаки, осуществляя проверку на втором шаге с целью отбраковки повторно переданных сообщений. 
+		\\
+		Но, как заметил Карлсен
+		(Carlsen), все равно можно осуществить атаку паралеллельного сеанса.
+		
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
 		\framesubtitle{Трёхсторонние протоколы}
 		
-		\textbf{Wide-Mouth-Frag*}
+		\textbf{Wide-Mouth-Frog}
 		\begin{enumerate}
 			\item $A -> S: ID_A || E_{K_{AS}}(T_A || ID_B || KS)$
 			\item $S -> B: E_{K_{BS}}(T_S || ID_A || KS)$
 		\end{enumerate}
-		Интервалы времени должны быть достаточно короткими.
+		
+		\bigskip
+		\textbf{Атака подмены типа}
+		\begin{enumerate}
+			\item $A -> S: ID_A || E_{K_{AS}}(T_A || ID_B || KS)$
+			\item $S -> B: E_{K_{BS}}(T_S || ID_A || KS)$
+			\item $I(B) -> S: ID_B || E_{K_{BS}}(T_S || ID_A || KS)$
+			\item $S -> A: E_{K_{AS}}(T^{'}_S || ID_B || KS)$
+			\item $I(A) -> S: ID_A || E_{K_{AS}}(T^{'}_S || ID_B || KS)$
+			\item $S -> B: E_{K_{BS}}(T^{''}_S || ID_A || KS)$		   
+		\end{enumerate}
+		Цель атаки - злоумышленник может поддерживать ключи рабочими, в случае их компрометации.
+	}
+
+	\frame{
+		\frametitle{Протоколы распределения ключей}
+		\framesubtitle{Трёхсторонние протоколы}
 		
 		\bigskip
 		\textbf{Yahalom}
@@ -242,11 +280,11 @@
 			\item $A -> B: ID_A || R_A$
 			\item $B -> S: ID_B || E_{K_{BS}}(ID_A || R_A || R_B)$
 			\item $S -> A: $\\
-		\quad \quad \quad  \quad $ m_a = E_{K_{AS}}(ID_B || KS || R_A || R_B) ||$ \\
-		 \quad \quad \quad  \quad $ m_b = E_{K_{BS}}(ID_A || KS)$
+			\quad \quad \quad  \quad $ m_a = E_{K_{AS}}(ID_B || KS || R_A || R_B) ||$ \\
+			\quad \quad \quad  \quad $ m_b = E_{K_{BS}}(ID_A || KS)$
 			\item $A -> B: m_b || E_{KS}(R_B)$			   
 		\end{enumerate}
-			
+		
 	}
 
 	\frame{
@@ -300,9 +338,10 @@
 		\framesubtitle{Needham-Schroeder (NSSK)}
 		
 		
-		\textbf{Атака} \\
+		\textbf{Атака повторением (Replay Attack)}
+		\bigskip
 		
-		Если ключ $KS$	скомпрометирован, возможна атака на протокол методом повтора сеанса: берутся	сообщения из прошлого сеанса с ключом $KS^{*}$: 
+		Если ключ $KS$	скомпрометирован, возможна атака на протокол методом повтора сеанса: берутся	сообщения из прошлого сеанса с ключом $KS^{*}$: \\
 		
 		\begin{enumerate}
 			\item $A -> S: ID_A || ID_B || R_A$
