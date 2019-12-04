@@ -47,7 +47,7 @@
 		
 		Концепция аутентификации данных появилась в 1970-х годах в банковской сфере.\\
 		
-		Сущетвует три вида реализации AE-режима:
+		Сущетвует три метода реализации AE-режима:
 		\begin{enumerate}
 			\item Authentication and Encryption (MacAndEnc)
 			\item Authentication Then Encryption (MacThenEnc)
@@ -131,7 +131,36 @@
 	\includegraphics[width=0.8\linewidth]{mac.png}
 
 }
+	\frame{
+	\frametitle{AEAD-режим}
+		Сущетвует 2 метода реализации AE-режима:
+		\begin{enumerate}
+			\item С помощью алгоритмов EncThenMac и MacThenEnc.
+			\item С помощью модификации AE-режима.
+		\end{enumerate}
+	\bigskip
+	$H$ - открытый загаловок; $M$ - сообщение; $N$ - nonce; $E$ - симметричная к/c; $F$ -  MAC-алгоритм;
+	\includegraphics[width=0.4\linewidth]{Encrypt-Then-mac.png}
+	\includegraphics[width=0.4\linewidth]{Mac-then-encrypt.png}	
 	
+	}
+	
+	\frame{
+		\frametitle{AEAD-режим}
+		Примеры модификации AE-режима:
+		\begin{enumerate}
+			\item Nonce stealing. \\
+			Открытый загаловок передается внутри поля nonce.
+			\item Ciphertext translation. 
+			$\hat{E}(K, K_{MAC}, N, M, H)= E_K(N,M)\oplus MAC_{K_{MAC}}(H)$
+			
+			$\hat{D}(K, K_{MAC}, N, C, H)= D_K(N, C \oplus MAC_{K_{MAC}}(H))$,\\
+			
+			где $E, D$ - шифрование и дешифрование в режиме AE.
+			
+		\end{enumerate}
+		
+	}
 	
 	\frame{
 		\frametitle{Введение}
