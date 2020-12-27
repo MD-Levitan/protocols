@@ -14,7 +14,7 @@
 
 \author{Деркач Максим Юрьевич}
 \title{Криптографические протоколы}
-\subtitle{AE-, AEAD-режимы шифрования. Протокол SSH}
+\subtitle{AE-, AEAD-режимы шифрования}
 \setbeamercolor{frametitle}{bg=cyan!10}
 
 
@@ -28,6 +28,7 @@
 		
 		\url{https://www.cs.jhu.edu/~Eastubble/dss/ae.pdf}
 		\url{http://cseweb.ucsd.edu/~mihir/papers/oem.pdf}
+		\url{https://habr.com/en/post/425637/}
 				
 			
 	}
@@ -44,8 +45,8 @@
 	\frame{
 	\frametitle{AE-режим}
 		Шифрование с проверкой подлинности обеспечивает конфиденциальность и целостность данных для защищаемой информации. \\
+		\bigskip
 		
-		Концепция аутентификации данных появилась в 1970-х годах в банковской сфере.\\
 		
 		Сущетвует три метода реализации AE-режима:
 		\begin{enumerate}
@@ -162,66 +163,6 @@
 		
 	}
 	
-	\frame{
-		\frametitle{Введение}
-		\textbf{Протокол SSH} -  сетевой протокол прикладного уровня, позволяющий производить удалённое управление операционной системой и туннелирование TCP-соединений (например, для передачи файлов). Данный проткол состоит из 3 подпротоколов:\\
-		
-		\begin{itemize}
-			\item Транспортный протокол (The Transport Protocol)[SSH-TRANS] - отвечает за аутентификацию, конфендициальность, целостность и опционально сжатие данных.
-			Этот протокол зачастую работает поверх протокола TCP/IP.\\
-			Документация: \textbf{RFC 4253 - The Secure Shell (SSH) Transport Layer Protocol}
-		\end{itemize}	
-	}
-
-	\frame{
-	\frametitle{Введение}
-	\begin{itemize}
-		
-		\item  Протокол пользовательской аутентификации (The User Authentication Protocol)[SSH-USERAUTH] - отвечает за аутентификацию между клиентом и сервером. 
-		Этот протокол работает поверх протокола SSH-TRANS.
-		Документация: \textbf{RFC 4252 - The Secure Shell (SSH) Authentication Protocol}
-		
-		\item Протокол соединения (The Connection Protocol) [SSH-CONNECT] - протокол взаимодействия. Этот протокол работает поверх протокола SSH-USERAUTH.
-		Документация: \textbf{RFC 4254 - The Secure Shell (SSH) Connection Protocol}
-		
-	\end{itemize}
-	
-	}
-
-	\frame {
-		\frametitle{SSH-TRANS}
-			
-			\textbf{Транспортный проткол (уровень) SSH} является транспортным протоколом низкого уровня.\\
-			 
-			Он обеспечивает надежное шифрование, криптографическую аутентификацию хоста(этот протокол не выполняет аутентификацию пользователя) и защиту целостности данных.
-	}
-
-	\frame {
-		\frametitle{SSH-TRANS}
-		
-		\begin{enumerate}
-			\item  Установка TCP-соединения.
-			\item  Обмен идентификационными данными (Protocol Version Exchange): стороны обмениваются версиями SSH-протокола и другими вспомогательными данными, необходимыми для выяснения совместимости протоколов и для выбора алгоритмов работы.
-			\item Выбор алгоритмов (Key Exchange): обмена ключами, шифрования и сжатия: каждая сторона, отправляет список имен поддерживаемых алгоритмов.
-			
-			\item Получение сессионных ключей (Output from Key Exchange): процесс получения сессионного ключа отличается в зависимости от версии алгоритма.
-			На этом шаге выполняеться проткол обмена ключами, в результате которого обе стороны вычисляют два значения: $K$ - общий секрет, $H$ - хэш.
-			
-		\end{enumerate}
-	}
-
-		\frame {
-		\frametitle{SSH-TRANS}
-		\includegraphics[width=0.8\linewidth]{alg.jpeg}
-
-	}
-
-			\frame {
-		\frametitle{SSH-TRANS}
-		\includegraphics[width=0.8\linewidth]{key.jpeg}
-		
-	}
-
 
 	\frame {
 	\begin{figure}
